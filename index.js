@@ -77,18 +77,34 @@ app.post('/api/chat', async (req, res) => {
 			parts: [{ text }]
 		}));
 
-		const response = await ai.models.generateContent({
+		res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+		res.setHeader('Transfer-Encoding', 'chunked');
+		res.setHeader('Cache-Control', 'no-cache');
+		res.setHeader('Connection', 'keep-alive');
+
+		const stream = await ai.models.generateContentStream({
 			model: model,
 			contents,
 			config: {
 				temperature: 0.9,
-				systemInstruction: "aware of the context the user said to you, be formal, you could use sarcasm but not too much, and keep your responses short. always reply with lowercase characters. answer in english by default. and start your conversation by saying 'what's on your mind?'"
+				systemInstruction: "you only talks about playstation games, use gamer words."
 			},
 		});
 
-		res.status(200).json({ result: response.text });
+		for await (const chunk of stream) {
+			const chunkText = chunk.text;
+			if (chunkText) {
+				res.write(chunkText);
+			}
+		}
+		res.end();
 	} catch (error) {
-		res.status(500).json({ error: error.message });
+		if (!res.headersSent) {
+			res.status(500).json({ error: error.message });
+		} else {
+			res.write(`\n[Error: ${error.message}]`);
+			res.end();
+		}
 	}
 });
 
