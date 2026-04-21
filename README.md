@@ -52,19 +52,19 @@
 
 ## Project Structure
 
-pocket-sackboy/
-├── public/
-│   ├── index.html
-│   ├── style.css
-│   ├── script.js
-│   └── images/
-│       ├── sackboy-left.png
-│       └── sackboy-right.png
-├── index.js
-├── .env
-├── package.json
-├── README.md
-└── LICENSE
+  + pocket-sackboy
+    + public
+      + index.html
+      + style.css
+      + script.js
+      + images
+        + sackboy-left.png
+        + sackboy-right.png
+    + index.js
+    + .env
+    + package.json
+    + README.md
+    + LICENSE
 
 ## License
 
